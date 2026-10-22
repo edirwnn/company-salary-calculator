@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Gaji Perusahaan</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #edf2ff;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 28px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #111a36, #182d52);
+      border-bottom: 1px solid #283b60;
+    }
+
+    header .logo {
+      color: #42e8ff;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 4px;
+    }
+
+    header h1 { margin: 12px 0 8px; font-size: 28px; }
+    header p { margin: 0; color: #a9b9d6; }
+
+    main {
+      max-width: 950px;
+      margin: 30px auto;
+      padding: 0 16px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #131c32;
+      border: 1px solid #293957;
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    h2 { font-size: 18px; margin: 0 0 20px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #bdc9df;
+      margin: 15px 0 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #354665;
+      border-radius: 9px;
+      background: #0b1325;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus { border-color: #42e8ff; }
+
+    button {
+      border: 0;
+      padding: 12px 15px;
+      border-radius: 9px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 22px;
+      color: #06101c;
+      background: #42e8ff;
+    }
+
+    .secondary {
+      color: #e4eaff;
+      background: #273653;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #0b2931;
+      border: 1px solid #17606a;
+    }
+
+    .result small { color: #a8dbe2; }
+
+    .amount {
+      margin-top: 8px;
+      color: #42e8ff;
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #293957;
+      font-size: 14px;
+    }
+
+    .row span:first-child { color: #bdc9df; }
+    .row strong { text-align: right; overflow-wrap: anywhere; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .note {
+      color: #98a9c7;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 18px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      color: #8495b4;
+      font-size: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+      header h1 { font-size: 23px; }
+    }
+
+    @media print {
+      body { background: white; color: black; }
+      header, .form-card, .actions, footer, .note { display: none; }
+      main { margin: 0; max-width: 100%; }
+      .layout { display: block; }
+      .card, .result { background: white; color: black; border: 1px solid #ccc; }
+      .row span:first-child, .result small { color: #333; }
+      .amount { color: black; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">EDIRWNN • HR TOOLS</div>
+    <h1>Kalkulator Gaji Karyawan</h1>
+    <p>Perhitungan gaji bulanan yang praktis dan sederhana</p>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="card form-card">
+        <h2>Data Karyawan</h2>
+
+        <form id="salaryForm">
+          <label for="employee">Nama karyawan</label>
+          <input id="employee" type="text"
+                 placeholder="Masukkan nama karyawan" required>
+
+          <label for="position">Jabatan</label>
+          <input id="position" type="text"
+                 placeholder="Contoh: Staff Administrasi" required>
+
+          <label for="base">Gaji pokok (Rp)</label>
+          <input id="base" type="number" min="0" step="1000"
+                 value="5000000" required>
+
+          <label for="allowance">Total tunjangan (Rp)</label>
+          <input id="allowance" type="number" min="0" step="1000"
+                 value="500000" required>
+
+          <label for="overtime">Uang lembur (Rp)</label>
+          <input id="overtime" type="number" min="0" step="1000"
+                 value="0" required>
+
+          <label for="deduction">Total potongan (Rp)</label>
+          <input id="deduction" type="number" min="0" step="1000"
+                 value="100000" required>
+
+          <button class="primary" type="submit">
+            Hitung Gaji Bersih
+          </button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Ringkasan Penggajian</h2>
+        <div id="employeeInfo">
+          Masukkan data karyawan untuk memulai perhitungan.
+        </div>
+
+        <div class="result" aria-live="polite">
+          <small>GAJI BERSIH PER BULAN</small>
+          <div class="amount" id="netSalary">Rp0</div>
+        </div>
+
+        <div class="row">
+          <span>Gaji pokok</span>
+          <strong id="outBase">Rp0</strong>
+        </div>
+        <div class="row">
+          <span>Total tunjangan</span>
+          <strong id="outAllowance">Rp0</strong>
+        </div>
+        <div class="row">
+          <span>Uang lembur</span>
+          <strong id="outOvertime">Rp0</strong>
+        </div>
+        <div class="row">
+          <span>Total pendapatan</span>
+          <strong id="outGross">Rp0</strong>
+        </div>
+        <div class="row">
+          <span>Total potongan</span>
+          <strong id="outDeduction">Rp0</strong>
+        </div>
+
+        <div class="actions">
+          <button class="secondary" type="button" id="printBtn">
+            Cetak Slip
+          </button>
+          <button class="secondary" type="button" id="resetBtn">
+            Reset
+          </button>
+        </div>
+
+        <p class="note">
+          Catatan: semua nilai diisi secara manual. Potongan pajak,
+          BPJS, dan komponen lain harus dimasukkan sesuai perhitungan
+          perusahaan. Hasil ini bukan perhitungan pajak otomatis.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 EDIRWNN • Employee Salary Calculator
+  </footer>
+
+  <script>
+    const form = document.getElementById("salaryForm");
+
+    const rupiah = (number) =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(number);
+
+    function calculateSalary(event) {
+      if (event) event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      const name = document.getElementById("employee").value.trim();
+      const position = document.getElementById("position").value.trim();
+      const base = Number(document.getElementById("base").value);
+      const allowance = Number(document.getElementById("allowance").value);
+      const overtime = Number(document.getElementById("overtime").value);
+      const deduction = Number(document.getElementById("deduction").value);
+
+      const gross = base + allowance + overtime;
+      const net = gross - deduction;
+
+      document.getElementById("employeeInfo").innerHTML = "";
+
+      const info = document.createElement("div");
+      info.className = "row";
+      const label = document.createElement("span");
+      label.textContent = "Karyawan / Jabatan";
+      const value = document.createElement("strong");
+      value.textContent = name + " / " + position;
+      info.append(label, value);
+      document.getElementById("employeeInfo").appendChild(info);
+
+      document.getElementById("outBase").textContent = rupiah(base);
+      document.getElementById("outAllowance").textContent = rupiah(allowance);
+      document.getElementById("outOvertime").textContent = rupiah(overtime);
+      document.getElementById("outGross").textContent = rupiah(gross);
+      document.getElementById("outDeduction").textContent = rupiah(deduction);
+      document.getElementById("netSalary").textContent = rupiah(net);
+    }
+
+    form.addEventListener("submit", calculateSalary);
+
+    document.getElementById("printBtn").addEventListener("click", () => {
+      calculateSalary();
+      if (form.reportValidity()) window.print();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      form.reset();
+      document.getElementById("employeeInfo").textContent =
+        "Masukkan data karyawan untuk memulai perhitungan.";
+      ["outBase", "outAllowance", "outOvertime",
+       "outGross", "outDeduction", "netSalary"].forEach(id => {
+        document.getElementById(id).textContent = "Rp0";
+      });
+    });
+
+    calculateSalary();
+  </script>
+</body>
+</html>
